@@ -1,9 +1,6 @@
 {
   "compilerOptions": {
     "module": "commonjs",
-    "moduleResolution": "node",
-    "esModuleInterop": true,
-    "isolatedModules": true,
     "declaration": true,
     "removeComments": true,
     "emitDecoratorMetadata": true,
@@ -15,10 +12,12 @@
     "baseUrl": "./",
     "incremental": true,
     "skipLibCheck": true,
+    "strict": true,
     "strictNullChecks": true,
     "forceConsistentCasingInFileNames": true,
     "noImplicitAny": false,
     "strictBindCallApply": false,
+    "strictPropertyInitialization": false,
     "noFallthroughCasesInSwitch": false
   }
 }

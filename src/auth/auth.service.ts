@@ -27,7 +27,7 @@ export class AuthService {
     const ownerRole = await this.prisma.role.findUnique({
       where: { name: 'Owner' },
     });
-
+    console.log('OWNER ROLE:', ownerRole);
     if (!ownerRole) {
       throw new Error('Owner role not found');
     }
