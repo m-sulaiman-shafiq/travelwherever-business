@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import Sidebar from '../components/Sidebar';
 import {
   Check,
   Clock3,
@@ -111,191 +112,191 @@ function AccountantDashboard() {
   }
 
   return (
-    <div className="dashboard-page">
-      <header className="dashboard-header">
-        <div>
-          <div className="dashboard-brand">
-            <div className="brand-mark">L</div>
-            <span>LedgerFlow</span>
-          </div>
-
-          <p className="company-name">
-            {company.name || 'Company'} · Accountant Dashboard
-          </p>
-        </div>
-
-        <div className="header-user">
+    <div className="app-layout">
+      <Sidebar role={user.role} />
+      <div className="dashboard-page">
+        <header className="dashboard-header">
           <div>
-            <strong>
-              {user.firstName} {user.lastName}
-            </strong>
-            <span>{user.role}</span>
-          </div>
-
-          <button className="logout-button" onClick={handleLogout}>
-            <LogOut size={17} />
-            Logout
-          </button>
-        </div>
-      </header>
-
-      <main className="dashboard-content">
-        <div className="dashboard-title">
-          <div>
-            <h1>Expense Overview</h1>
-            <p>Review and manage your company's expenses.</p>
-          </div>
-        </div>
-
-        <section className="summary-grid">
-          <div className="summary-card">
-            <div className="summary-icon">
-              <Receipt size={20} />
+            <div className="dashboard-brand">
+              <div className="brand-mark">L</div>
+              <span>LedgerFlow</span>
             </div>
 
+            <p className="company-name">
+              {company.name || 'Company'} · Accountant Dashboard
+            </p>
+          </div>
+
+          <div className="header-user">
             <div>
-              <span>Total Expenses</span>
-              <strong>{summary?.totalExpenses ?? 0}</strong>
-            </div>
-          </div>
-
-          <div className="summary-card">
-            <div className="summary-icon">
-              <Clock3 size={20} />
-            </div>
-
-            <div>
-              <span>Pending</span>
-              <strong>{summary?.pending ?? 0}</strong>
-            </div>
-          </div>
-
-          <div className="summary-card">
-            <div className="summary-icon">
-              <Check size={20} />
-            </div>
-
-            <div>
-              <span>Approved</span>
-              <strong>{summary?.approved ?? 0}</strong>
-            </div>
-          </div>
-
-          <div className="summary-card">
-            <div className="summary-icon">
-              <DollarSign size={20} />
-            </div>
-
-            <div>
-              <span>Total Amount</span>
               <strong>
-                AED {Number(summary?.totalAmount ?? 0).toFixed(2)}
+                {user.firstName} {user.lastName}
               </strong>
+              <span>{user.role}</span>
             </div>
-          </div>
-        </section>
 
-        <section className="expenses-section">
-          <div className="section-heading">
+            <button className="logout-button" onClick={handleLogout}>
+              <LogOut size={17} />
+              Logout
+            </button>
+          </div>
+        </header>
+
+        <main className="dashboard-content">
+          <div className="dashboard-title">
             <div>
-              <h2>Recent Expenses</h2>
-              <p>Review submitted employee expenses.</p>
+              <h1>Expense Overview</h1>
+              <p>Review and manage your company's expenses.</p>
             </div>
           </div>
 
-          {expenses.length === 0 ? (
-            <div className="empty-state">
-              <Receipt size={32} />
-              <h3>No expenses yet</h3>
-              <p>Employee expenses will appear here.</p>
+          <section className="summary-grid">
+            <div className="summary-card">
+              <div className="summary-icon">
+                <Receipt size={20} />
+              </div>
+
+              <div>
+                <span>Total Expenses</span>
+                <strong>{summary?.totalExpenses ?? 0}</strong>
+              </div>
             </div>
-          ) : (
-            <div className="table-wrapper">
-              <table className="expense-table">
-                <thead>
-                  <tr>
-                    <th>Employee</th>
-                    <th>Category</th>
-                    <th>Description</th>
-                    <th>Amount</th>
-                    <th>VAT</th>
-                    <th>Date</th>
-                    <th>Status</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
 
-                <tbody>
-                  {expenses.map((expense) => (
-                    <tr key={expense.id}>
-                      <td>
-                        <strong>
-                          {expense.employee.firstName}{' '}
-                          {expense.employee.lastName}
-                        </strong>
-                      </td>
+            <div className="summary-card">
+              <div className="summary-icon">
+                <Clock3 size={20} />
+              </div>
 
-                      <td>{expense.category}</td>
+              <div>
+                <span>Pending</span>
+                <strong>{summary?.pending ?? 0}</strong>
+              </div>
+            </div>
 
-                      <td>{expense.description || '—'}</td>
+            <div className="summary-card">
+              <div className="summary-icon">
+                <Check size={20} />
+              </div>
 
-                      <td>
-                        {expense.currency}{' '}
-                        {Number(expense.amount).toFixed(2)}
-                      </td>
+              <div>
+                <span>Approved</span>
+                <strong>{summary?.approved ?? 0}</strong>
+              </div>
+            </div>
 
-                      <td>
-                        {expense.currency}{' '}
-                        {Number(expense.vatAmount).toFixed(2)}
-                      </td>
+            <div className="summary-card">
+              <div className="summary-icon">
+                <DollarSign size={20} />
+              </div>
 
-                      <td>
-                        {new Date(expense.expenseDate).toLocaleDateString()}
-                      </td>
+              <div>
+                <span>Total Amount</span>
+                <strong>
+                  AED {Number(summary?.totalAmount ?? 0).toFixed(2)}
+                </strong>
+              </div>
+            </div>
+          </section>
 
-                      <td>
-                        <span
-                          className={`status status-${expense.status.toLowerCase()}`}
-                        >
-                          {expense.status}
-                        </span>
-                      </td>
+          <section className="expenses-section">
+            <div className="section-heading">
+              <div>
+                <h2>Recent Expenses</h2>
+                <p>Review submitted employee expenses.</p>
+              </div>
+            </div>
 
-                      <td>
-                        {expense.status === 'PENDING' ? (
-                          <div className="action-buttons">
-                            <button
-                              className="approve-button"
-                              disabled={processingId === expense.id}
-                              onClick={() => handleApprove(expense.id)}
-                            >
-                              <Check size={15} />
-                              Approve
-                            </button>
-
-                            <button
-                              className="reject-button"
-                              disabled={processingId === expense.id}
-                              onClick={() => handleReject(expense.id)}
-                            >
-                              <X size={15} />
-                              Reject
-                            </button>
-                          </div>
-                        ) : (
-                          <span className="processed-text">
-                            Processed
-                          </span>
-                        )}
-                      </td>
+            {expenses.length === 0 ? (
+              <div className="empty-state">
+                <Receipt size={32} />
+                <h3>No expenses yet</h3>
+                <p>Employee expenses will appear here.</p>
+              </div>
+            ) : (
+              <div className="table-wrapper">
+                <table className="expense-table">
+                  <thead>
+                    <tr>
+                      <th>Employee</th>
+                      <th>Category</th>
+                      <th>Description</th>
+                      <th>Amount</th>
+                      <th>VAT</th>
+                      <th>Date</th>
+                      <th>Status</th>
+                      <th>Action</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-        </section>
-      </main>
+                  </thead>
+
+                  <tbody>
+                    {expenses.map((expense) => (
+                      <tr key={expense.id}>
+                        <td>
+                          <strong>
+                            {expense.employee.firstName}{' '}
+                            {expense.employee.lastName}
+                          </strong>
+                        </td>
+
+                        <td>{expense.category}</td>
+
+                        <td>{expense.description || '—'}</td>
+
+                        <td>
+                          {expense.currency} {Number(expense.amount).toFixed(2)}
+                        </td>
+
+                        <td>
+                          {expense.currency}{' '}
+                          {Number(expense.vatAmount).toFixed(2)}
+                        </td>
+
+                        <td>
+                          {new Date(expense.expenseDate).toLocaleDateString()}
+                        </td>
+
+                        <td>
+                          <span
+                            className={`status status-${expense.status.toLowerCase()}`}
+                          >
+                            {expense.status}
+                          </span>
+                        </td>
+
+                        <td>
+                          {expense.status === 'PENDING' ? (
+                            <div className="action-buttons">
+                              <button
+                                className="approve-button"
+                                disabled={processingId === expense.id}
+                                onClick={() => handleApprove(expense.id)}
+                              >
+                                <Check size={15} />
+                                Approve
+                              </button>
+
+                              <button
+                                className="reject-button"
+                                disabled={processingId === expense.id}
+                                onClick={() => handleReject(expense.id)}
+                              >
+                                <X size={15} />
+                                Reject
+                              </button>
+                            </div>
+                          ) : (
+                            <span className="processed-text">Processed</span>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </section>
+        </main>
+      </div>
     </div>
   );
 }
