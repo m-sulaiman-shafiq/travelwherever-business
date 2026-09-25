@@ -1,7 +1,7 @@
 import { FormEvent, useEffect, useState } from 'react';
-import { LogOut, Receipt, Send, Sidebar } from 'lucide-react';
+import { LogOut, Receipt, Send } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-
+import Sidebar from '../components/Sidebar';
 import { createExpense, getMyExpenses } from '../services/api';
 
 interface Expense {
