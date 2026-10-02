@@ -13,10 +13,23 @@ export class ExpensesService {
   constructor(private readonly prisma: PrismaService) {}
 
   async create(userId: string, companyId: string, dto: CreateExpenseDto) {
+    const account = await this.prisma.account.findFirst({
+      where: {
+        id: dto.accountId,
+        companyId,
+        type: 'EXPENSE',
+      },
+    });
+
+    if (!account) {
+      throw new BadRequestException('Invalid expense account');
+    }
+
     return this.prisma.expense.create({
       data: {
         companyId,
         employeeId: userId,
+        accountId: dto.accountId,
         category: dto.category,
         description: dto.description,
         amount: dto.amount,
@@ -110,32 +123,32 @@ export class ExpensesService {
   }
 
   async getSummary(companyId: string) {
-  const expenses = await this.prisma.expense.findMany({
-    where: { companyId },
-  });
+    const expenses = await this.prisma.expense.findMany({
+      where: { companyId },
+    });
 
-  const totalAmount = expenses.reduce(
-    (sum, expense) => sum + Number(expense.amount),
-    0,
-  );
+    const totalAmount = expenses.reduce(
+      (sum, expense) => sum + Number(expense.amount),
+      0,
+    );
 
-  const totalVat = expenses.reduce(
-    (sum, expense) => sum + Number(expense.vatAmount),
-    0,
-  );
+    const totalVat = expenses.reduce(
+      (sum, expense) => sum + Number(expense.vatAmount),
+      0,
+    );
 
-  return {
-    totalExpenses: expenses.length,
+    return {
+      totalExpenses: expenses.length,
 
-    pending: expenses.filter((e) => e.status === 'PENDING').length,
+      pending: expenses.filter((e) => e.status === 'PENDING').length,
 
-    approved: expenses.filter((e) => e.status === 'APPROVED').length,
+      approved: expenses.filter((e) => e.status === 'APPROVED').length,
 
-    rejected: expenses.filter((e) => e.status === 'REJECTED').length,
+      rejected: expenses.filter((e) => e.status === 'REJECTED').length,
 
-    totalAmount,
+      totalAmount,
 
-    totalVat,
-  };
-}
+      totalVat,
+    };
+  }
 }

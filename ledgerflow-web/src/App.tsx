@@ -4,6 +4,8 @@ import Login from './pages/Login';
 import EmployeeDashboard from './pages/EmployeeDashboard';
 import AccountantDashboard from './pages/AccountantDashboard';
 import ProtectedRoute from './components/ProtectedRoute';
+import Team from './pages/Team';
+import Accounts from './pages/Accounts';
 
 function App() {
   const token = localStorage.getItem('accessToken');
@@ -41,6 +43,22 @@ function App() {
           element={
             <ProtectedRoute allowedRoles={['Owner', 'Accountant']}>
               <AccountantDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/team"
+          element={
+            <ProtectedRoute allowedRoles={['Owner']}>
+              <Team />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/accounts"
+          element={
+            <ProtectedRoute allowedRoles={['Owner', 'Accountant']}>
+              <Accounts />
             </ProtectedRoute>
           }
         />

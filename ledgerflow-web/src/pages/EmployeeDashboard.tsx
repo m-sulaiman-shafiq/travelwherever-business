@@ -3,6 +3,7 @@ import { LogOut, Receipt, Send } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import { createExpense, getMyExpenses } from '../services/api';
+import { getExpenseAccounts } from '../services/api';
 
 interface Expense {
   id: string;
@@ -26,8 +27,11 @@ function EmployeeDashboard() {
   const [submitting, setSubmitting] = useState(false);
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
-
+  const [expenseAccounts, setExpenseAccounts] = useState<
+    { id: string; name: string; code?: string }[]
+  >([]);
   const [form, setForm] = useState({
+    accountId: '',
     category: 'Meals',
     description: '',
     amount: '',
@@ -35,6 +39,20 @@ function EmployeeDashboard() {
     currency: 'AED',
     expenseDate: '',
   });
+
+  useEffect(() => {
+    loadExpenses();
+    loadExpenseAccounts();
+  }, []);
+
+  const loadExpenseAccounts = async () => {
+    try {
+      const data = await getExpenseAccounts();
+      setExpenseAccounts(data);
+    } catch (err) {
+      console.error('Unable to load expense accounts', err);
+    }
+  };
 
   const loadExpenses = async () => {
     try {
@@ -64,6 +82,7 @@ function EmployeeDashboard() {
 
     try {
       await createExpense({
+        accountId: form.accountId,
         category: form.category,
         description: form.description || undefined,
         amount: Number(form.amount),
@@ -75,6 +94,7 @@ function EmployeeDashboard() {
       setMessage('Expense submitted successfully.');
 
       setForm({
+        accountId: '',
         category: 'Meals',
         description: '',
         amount: '',
@@ -154,23 +174,27 @@ function EmployeeDashboard() {
             <form onSubmit={handleSubmit} className="expense-form">
               <div className="form-row">
                 <div className="form-group">
-                  <label>Category</label>
+                  <label>Expense Account</label>
 
                   <select
-                    value={form.category}
+                    value={form.accountId}
                     onChange={(e) =>
                       setForm({
                         ...form,
-                        category: e.target.value,
+                        accountId: e.target.value,
                       })
                     }
+                    required
                   >
-                    <option value="Meals">Meals</option>
-                    <option value="Travel">Travel</option>
-                    <option value="Accommodation">Accommodation</option>
-                    <option value="Transportation">Transportation</option>
-                    <option value="Office">Office</option>
-                    <option value="Other">Other</option>
+                    <option value="">Select an expense account</option>
+
+                    {expenseAccounts.map((account) => (
+                      <option key={account.id} value={account.id}>
+                        {account.code
+                          ? `${account.code} — ${account.name}`
+                          : account.name}
+                      </option>
+                    ))}
                   </select>
                 </div>
 

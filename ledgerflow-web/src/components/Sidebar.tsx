@@ -1,4 +1,10 @@
-import { LayoutDashboard, LogOut, Receipt } from 'lucide-react';
+import {
+  BookOpen,
+  LayoutDashboard,
+  LogOut,
+  Receipt,
+  Users,
+} from 'lucide-react';
 import { NavLink, useNavigate } from 'react-router-dom';
 
 interface SidebarProps {
@@ -46,6 +52,29 @@ function Sidebar({ role }: SidebarProps) {
           <Receipt size={18} />
           {isEmployee ? 'My Expenses' : 'Expenses'}
         </NavLink>
+
+        {role === 'Owner' && (
+          <NavLink
+            to="/team"
+            className={({ isActive }) =>
+              `sidebar-link ${isActive ? 'active' : ''}`
+            }
+          >
+            <Users size={18} />
+            Team
+          </NavLink>
+        )}
+        {(role === 'Owner' || role === 'Accountant') && (
+          <NavLink
+            to="/accounts"
+            className={({ isActive }) =>
+              `sidebar-link ${isActive ? 'active' : ''}`
+            }
+          >
+            <BookOpen size={18} />
+            Chart of Accounts
+          </NavLink>
+        )}
       </nav>
 
       <button className="sidebar-logout" onClick={handleLogout}>

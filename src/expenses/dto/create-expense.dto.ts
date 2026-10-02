@@ -8,6 +8,9 @@ import {
 
 export class CreateExpenseDto {
   @IsString()
+  accountId!: string;
+
+  @IsString()
   category!: string;
 
   @IsOptional()

@@ -82,10 +82,7 @@ export class AuthService {
       throw new UnauthorizedException('Invalid email or password');
     }
 
-    const passwordMatches = await bcrypt.compare(
-      password,
-      user.password,
-    );
+    const passwordMatches = await bcrypt.compare(password, user.password);
 
     if (!passwordMatches) {
       throw new UnauthorizedException('Invalid email or password');
@@ -113,6 +110,60 @@ export class AuthService {
       company: {
         id: user.company.id,
         name: user.company.name,
+      },
+    };
+  }
+
+  async createEmployee(dto: SignupDto) {
+    const existingUser = await this.prisma.user.findUnique({
+      where: { email: dto.email },
+    });
+
+    if (existingUser) {
+      throw new ConflictException('Email already registered');
+    }
+
+    const employeeRole = await this.prisma.role.findUnique({
+      where: { name: 'Employee' },
+    });
+
+    if (!employeeRole) {
+      throw new Error('Employee role not found');
+    }
+
+    const company = await this.prisma.company.findFirst({
+      where: { name: dto.companyName },
+    });
+
+    if (!company) {
+      throw new Error('Company not found');
+    }
+
+    const hashedPassword = await bcrypt.hash(dto.password, 10);
+
+    const employee = await this.prisma.user.create({
+      data: {
+        email: dto.email,
+        password: hashedPassword,
+        firstName: dto.firstName,
+        lastName: dto.lastName,
+        companyId: company.id,
+        roleId: employeeRole.id,
+      },
+    });
+
+    return {
+      message: 'Employee created successfully',
+      user: {
+        id: employee.id,
+        email: employee.email,
+        firstName: employee.firstName,
+        lastName: employee.lastName,
+        role: 'Employee',
+      },
+      company: {
+        id: company.id,
+        name: company.name,
       },
     };
   }
